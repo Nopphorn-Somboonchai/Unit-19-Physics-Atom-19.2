@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.e2e/
+.DS_Store
+Thumbs.db
+*.log
+_site/

@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Interactive Physics Learning Portal สำหรับบทที่ 19 ฟิสิกส์อะตอม (19.2 ปรากฏการณ์โฟโตอิเล็กทริก) ม.6 - Simulators หลอดโฟโตอิเล็กทริก กราฟ I-ΔV กราฟ Ek,max-f, ตะลุยโจทย์สุ่ม RNG และระบบสอบจับเวลา 15 นาที โรงเรียนห้องสอนศึกษา ในพระอุปถัมภ์ฯ" />
+  <meta name="author" content="Nopphorn Somboonchai" />
+  <title>ฟิสิกส์ ม.6: บทที่ 19.2 ปรากฏการณ์โฟโตอิเล็กทริก (Photoelectric Effect) ⚡</title>
+
+  <!-- Preconnect for Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+
+  <!-- Google Fonts: Prompt, Sarabun, Lora, Fira Code -->
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&family=Lora:ital,wght@0,400..700;1,400..700&family=Fira+Code:wght@400;500;700&display=swap" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&family=Lora:ital,wght@0,400..700;1,400..700&family=Fira+Code:wght@400;500;700&display=swap" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+  <!-- Local Offline KaTeX (No CDN) -->
+  <link rel="stylesheet" href="./vendor/katex/katex.min.css" />
+  <script defer src="./vendor/katex/katex.min.js"></script>
+  <script defer src="./vendor/katex/contrib/auto-render.min.js"></script>
+
+  <!-- Compiled Application Styles & Animations -->
+  <link rel="stylesheet" href="./assets/styles/style.css" />
+  <link rel="stylesheet" href="./assets/styles/animations.css" />
+</head>
+
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+  <!-- ==========================================================================
+       STICKY HEADER BANNER (PHYSICS LEARNING STANDARD v1.13.0)
+       ========================================================================== -->
+  <header class="text-white sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-3">
+      <div class="flex items-center gap-3">
+        <div
+          class="bg-indigo-500/20 text-cyan-300 p-3 rounded-xl border border-indigo-400/30 shadow-inner text-2xl flex items-center justify-center">
+          <i class="fa-solid fa-bolt-lightning"></i>
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-bold tracking-wide text-white drop-shadow-md">
+            ฟิสิกส์ ม.6 บทที่ 19 ฟิสิกส์อะตอม
+          </h1>
+          <p class="text-xs md:text-sm text-cyan-200">
+            บทที่ 19.2 ปรากฏการณ์โฟโตอิเล็กทริก (Photoelectric Effect) | โรงเรียนห้องสอนศึกษา ในพระอุปถัมภ์ฯ
+          </p>
+        </div>
+      </div>
+
+      <div class="hidden md:flex items-center gap-2">
+        <span class="bg-black/40 text-cyan-300 px-3 py-1.5 rounded-full text-xs font-semibold border border-white/10">
+          <i class="fa-solid fa-graduation-cap mr-1"></i> มัธยมศึกษาปีที่ 6
+        </span>
+        <button onclick="showSection('home')"
+          class="bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-xs font-medium border border-white/10 transition flex items-center gap-1 cursor-pointer">
+          <i class="fa-solid fa-house"></i> หน้าแรก
+        </button>
+      </div>
+
+      <div class="w-full md:hidden flex items-center justify-between">
+        <span
+          class="bg-black/40 text-cyan-200 px-3 py-1.5 rounded-full text-[11px] font-semibold border border-white/10">
+          มัธยมศึกษาปีที่ 6
+        </span>
+        <button onclick="toggleMobileMenu()"
+          class="bg-white/10 hover:bg-white/20 px-3 py-2 rounded-lg text-sm transition cursor-pointer"
+          aria-label="Toggle menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden border-t border-white/10 bg-slate-950/95 backdrop-blur-md">
+      <div class="max-w-6xl mx-auto px-4 py-3 grid grid-cols-2 gap-2 text-sm font-medium text-white">
+        <button onclick="showSection('home')"
+          class="bg-white/10 hover:bg-white/20 rounded-lg py-2 transition cursor-pointer">หน้าหลัก</button>
+        <button onclick="showSection('review')"
+          class="bg-white/10 hover:bg-white/20 rounded-lg py-2 transition cursor-pointer">บทเรียน & Simulators</button>
+        <button onclick="showSection('practice')"
+          class="bg-white/10 hover:bg-white/20 rounded-lg py-2 transition cursor-pointer">ฝึกทำโจทย์</button>
+        <button onclick="showSection('exam-start')"
+          class="bg-white/10 hover:bg-white/20 rounded-lg py-2 transition cursor-pointer">สอบเก็บคะแนน</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       MAIN CONTENT CONTAINER
+       ========================================================================== -->
+  <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-6">
+
+    <!-- ========================================================================
+         SECTION 1: HOME / LANDING PORTAL (sec-home)
+         ======================================================================== -->
+    <section id="sec-home" class="space-y-8 animate-[fadeIn_0.5s_ease-out]">
+      <!-- Hero Welcome Card -->
+      <div
+        class="bg-gradient-to-br from-indigo-950/90 via-slate-900/95 to-slate-950 text-white rounded-3xl p-6 md:p-8 shadow-xl border border-indigo-500/30 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+        <div class="space-y-4 max-w-2xl relative z-10">
+          <div
+            class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 text-cyan-300 border border-indigo-400/30 text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            ว33206 ฟิสิกส์ 6 | ภาคเรียนที่ 2
+          </div>
+          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight text-white leading-tight">
+            บทที่ 19.2 ปรากฏการณ์โฟโตอิเล็กทริก <br class="hidden sm:inline" />
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-300">
+              Photoelectric Effect & แนวคิดโฟตอนของไอน์สไตน์
+            </span>
+          </h2>
+          <p class="text-slate-300 text-sm md:text-base leading-relaxed">
+            ทดลองฉายลำแสงโฟตอน (\(E = hf = \frac{hc}{\lambda}\)) ตกกระทบผิวโลหะเพื่อสังเกตการหลุดของโฟโตอิเล็กตรอน
+            วิเคราะห์สมการของไอน์สไตน์ (\(E_{k,\max} = hf - W = eV_s\)), กราฟ \(I\)–\(\Delta V\),
+            กราฟ \(E_{k,\max}\)–\(f\) และการประยุกต์ใช้เซลล์โฟโตอิเล็กทริกตามหลักสูตร สสวท.
+          </p>
+          <div
+            class="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/10 w-fit">
+            <div class="flex items-center gap-2 text-xs md:text-sm text-slate-200">
+              <i class="fa-solid fa-clipboard-check text-cyan-400 text-lg"></i>
+              <span>ผลสอบล่าสุดของคุณ: <strong id="lbl-last-score" class="text-white">-</strong></span>
+            </div>
+            <button onclick="showLatestResultModal()"
+              class="text-cyan-300 hover:text-cyan-100 font-semibold text-xs flex items-center gap-1 transition ml-2 cursor-pointer">
+              <i class="fa-solid fa-eye"></i> ดูผลสอบ
+            </button>
+          </div>
+        </div>
+
+        <!-- Hero Graphic: Inline SVG Photoelectric Photon Striking Metal Surface -->
+        <div class="w-full md:w-72 flex justify-center relative z-10">
+          <svg class="w-64 h-56 drop-shadow-xl" viewBox="0 0 250 195" fill="none" xmlns="http://www.w3.org/2000/svg"
+            role="img" aria-label="แผนภาพโฟตอนตกกระทบผิวโลหะปลดปล่อยโฟโตอิเล็กตรอน">
+            <defs>
+              <linearGradient id="metalSlabGrad" x1="0" y1="110" x2="250" y2="145" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#334155" />
+                <stop offset="50%" stop-color="#64748b" />
+                <stop offset="100%" stop-color="#1e293b" />
+              </linearGradient>
+              <linearGradient id="uvBeamGrad" x1="25" y1="20" x2="115" y2="118" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#a855f7" stop-opacity="0.45" />
+                <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.08" />
+              </linearGradient>
+            </defs>
+
+            <!-- Incident Light Cone -->
+            <polygon points="24,18 64,18 124,116 90,116" fill="url(#uvBeamGrad)" />
+
+            <!-- Incident Photon Wave Packets (hf) -->
+            <path d="M 38 24 Q 50 22 54 34 Q 58 46 70 44 Q 82 42 86 54 Q 90 66 102 64" stroke="#c084fc"
+              stroke-width="2.5" fill="none" />
+            <polygon points="109,72 99,68 106,61" fill="#c084fc" />
+            <path d="M 55 18 Q 66 18 70 28 Q 74 38 85 38 Q 96 38 100 48 Q 104 58 114 58" stroke="#38bdf8"
+              stroke-width="2" fill="none" opacity="0.85" />
+
+            <!-- Photon Label Pill -->
+            <rect x="12" y="42" width="60" height="20" rx="5" fill="#0f172a" stroke="#a855f7" stroke-width="1" />
+            <text x="42" y="55" fill="#e9d5ff" font-size="9.5" font-weight="bold" font-family="Fira Code"
+              text-anchor="middle">E = hf</text>
+
+            <!-- Metal Plate (Cathode with Work Function W) -->
+            <rect x="20" y="116" width="210" height="28" rx="6" fill="url(#metalSlabGrad)" stroke="#94a3b8"
+              stroke-width="1.5" />
+            <text x="125" y="134" fill="#f8fafc" font-size="9.5" font-weight="bold" font-family="Prompt"
+              text-anchor="middle">ผิวโลหะแคโทด (ฟังก์ชันงาน W = hf₀)</text>
+
+            <!-- Impact Glow -->
+            <circle cx="112" cy="116" r="8" fill="#38bdf8" opacity="0.35" />
+            <circle cx="112" cy="116" r="4" fill="#e0f2fe" />
+
+            <!-- Emitted Photoelectron Trajectory -->
+            <path d="M 114 112 Q 148 74 192 44" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4,3" fill="none" />
+            <polygon points="198,40 187,42 193,50" fill="#38bdf8" />
+
+            <!-- Ejected Photoelectron e- -->
+            <circle cx="170" cy="60" r="8" fill="#0ea5e9" stroke="#e0f2fe" stroke-width="1.5" />
+            <text x="170" y="63.5" fill="#ffffff" font-size="9" font-weight="bold" font-family="Fira Code"
+              text-anchor="middle">e⁻</text>
+            <text x="205" y="62" fill="#7dd3fc" font-size="9" font-weight="bold" font-family="Prompt"
+              text-anchor="middle">โฟโตอิเล็กตรอน</text>
+
+            <!-- Bottom Formula Badges -->
+            <rect x="12" y="158" width="114" height="26" rx="6" fill="#0f172a" stroke="#334155" />
+            <text x="69" y="175" fill="#38bdf8" font-size="9.5" font-weight="bold" font-family="Fira Code"
+              text-anchor="middle">Ek,max = hf - W</text>
+
+            <rect x="134" y="158" width="104" height="26" rx="6" fill="#0f172a" stroke="#334155" />
+            <text x="186" y="175" fill="#4ade80" font-size="9.5" font-weight="bold" font-family="Fira Code"
+              text-anchor="middle">Ek,max = eVs</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- ======================================================================
+           3 MAIN ACTION NAVIGATION CARDS
+           ====================================================================== -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <!-- 1. Review & Simulators -->
+        <button onclick="showSection('review')"
+          class="group text-left bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-blue-300 hover:shadow-md transition-all duration-300 relative overflow-hidden cursor-pointer">
+          <div
+            class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110">
+          </div>
+          <div
+            class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-xl mb-4 relative z-10">
+            <i class="fa-solid fa-book-open"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2 relative z-10">
+            1. ทบทวนเนื้อหา & Simulators <i
+              class="fa-solid fa-arrow-right text-sm text-blue-500 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all"></i>
+          </h3>
+          <p class="text-sm text-slate-500 leading-relaxed relative z-10">
+            หลอดโฟโตอิเล็กทริกเสมือนจริง, กราฟ \(I\)–\(\Delta V\), กราฟ \(E_{k,\max}\)–\(f\) เปรียบเทียบหลายโลหะ
+            และแบบจำลองประตูอัตโนมัติด้วยเซลล์โฟโตอิเล็กทริก
+          </p>
+        </button>
+
+        <!-- 2. Practice -->
+        <button onclick="showSection('practice')"
+          class="group text-left bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-cyan-300 hover:shadow-md transition-all duration-300 relative overflow-hidden cursor-pointer">
+          <div
+            class="absolute top-0 right-0 w-24 h-24 bg-cyan-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110">
+          </div>
+          <div
+            class="w-12 h-12 bg-cyan-100 text-cyan-600 rounded-xl flex items-center justify-center text-xl mb-4 relative z-10">
+            <i class="fa-solid fa-pencil"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2 relative z-10">
+            2. ฝึกทำโจทย์ <i
+              class="fa-solid fa-arrow-right text-sm text-cyan-500 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all"></i>
+          </h3>
+          <p class="text-sm text-slate-500 leading-relaxed relative z-10">
+            คลังโจทย์ 15 ข้อ (3 หัวข้อ) พร้อมระบบสุ่มตัวเลขตามเลขที่นักเรียน (RNG) เรื่อง \(W\), \(f_0\), \(E_{k,\max}\),
+            \(V_s\), \(v_{\max}\) และการวิเคราะห์กราฟ
+          </p>
+        </button>
+
+        <!-- 3. Timed Exam -->
+        <button onclick="showSection('exam-start')"
+          class="group text-left bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-red-300 hover:shadow-md transition-all duration-300 relative overflow-hidden cursor-pointer">
+          <div
+            class="absolute top-0 right-0 w-24 h-24 bg-red-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110">
+          </div>
+          <div
+            class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center text-xl mb-4 relative z-10">
+            <i class="fa-solid fa-stopwatch"></i>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2 relative z-10">
+            3. สอบเก็บคะแนน (15 นาที) <i
+              class="fa-solid fa-arrow-right text-sm text-red-500 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all"></i>
+          </h3>
+          <p class="text-sm text-slate-500 leading-relaxed relative z-10">
+            ทดสอบวัดผล 5 ข้อ 10 คะแนน สุ่มตัวแปรตามเลขที่ พร้อมระบบจับเวลา Anti-Cheat และกู้คืนเซสชันอัตโนมัติ
+          </p>
+        </button>
+      </div>
+
+      <!-- ======================================================================
+           4 QUICK CONCEPT SUMMARY CARDS (DARK SLATE BOX — สสวท. 19.2)
+           ====================================================================== -->
+      <div
+        class="bg-gradient-to-r from-slate-900 to-slate-950 p-6 rounded-2xl border border-slate-800 text-white shadow-lg space-y-4">
+        <div class="border-b border-slate-800 pb-3 flex items-center justify-between flex-wrap gap-2">
+          <h4 class="text-base font-bold text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-bolt-lightning text-cyan-400"></i> สรุปแก่นทฤษฎีและสูตรสำคัญประจำบทที่ 19.2 (สสวท.)
+          </h4>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Card 1: Photoelectric Effect & Einstein's Photon Concept -->
+          <div
+            class="bg-black/30 p-4 rounded-xl border border-white/10 hover:border-cyan-500/50 transition flex flex-col justify-between">
+            <div>
+              <div class="text-cyan-400 font-bold text-xs mb-1 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-sun"></i> 19.2.1 โฟตอน & ปรากฏการณ์โฟโตอิเล็กทริก
+              </div>
+              <h5 class="font-bold text-sm mb-2 text-slate-100">แนวคิดควอนตัมของแสง (โฟตอนของไอน์สไตน์)</h5>
+              <p class="text-xs text-slate-300 leading-relaxed mb-2">
+                ไอน์สไตน์อธิบายว่าคลื่นแม่เหล็กไฟฟ้าประกอบด้วยก้อนพลังงานที่เรียกว่า <strong>โฟตอน (Photon)</strong>
+                ซึ่งถ่ายโอนพลังงานทั้งก้อนให้แก่อิเล็กตรอน 1 ตัวแบบ 1 ต่อ 1 ทันที
+              </p>
+              <div
+                class="text-xs font-mono text-cyan-300 bg-black/40 p-2 rounded text-center border border-white/5 mb-3">
+                \( E = hf = \frac{hc}{\lambda} \)
+              </div>
+              <div class="bg-cyan-950/40 border border-cyan-500/25 rounded-lg p-2.5 text-xs text-slate-200 space-y-1.5">
+                <div class="font-bold text-cyan-300 border-b border-cyan-500/20 pb-1 flex items-center gap-1">
+                  <i class="fa-solid fa-list-check text-xs"></i> <span>ค่าคงที่สากล (CODATA / สสวท.):</span>
+                </div>
+                <ul class="space-y-1 text-[11px] text-slate-300 list-disc pl-4 leading-normal">
+                  <li>ค่าคงตัวของพลังค์: \(h = 6.626 \times 10^{-34}\text{ J}\cdot\text{s}\)</li>
+                  <li>อัตราเร็วแสง: \(c = 3.00 \times 10^8\text{ m/s}\)</li>
+                  <li>ประจุและมวลอิเล็กตรอน: \(e = 1.602 \times 10^{-19}\text{ C}\), \(m_e = 9.109 \times 10^{-31}\text{ kg}\)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Work Function W, Threshold f₀ & IPST Metal Table -->
+          <div
+            class="bg-black/30 p-4 rounded-xl border border-white/10 hover:border-blue-500/50 transition flex flex-col justify-between">
+            <div>
+              <div class="text-blue-400 font-bold text-xs mb-1 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-layer-group"></i> 19.2.1 ฟังก์ชันงาน (W) & ค่าขีดเริ่ม
+              </div>
+              <h5 class="font-bold text-sm mb-2 text-slate-100">เงื่อนไขการหลุดของโฟโตอิเล็กตรอน</h5>
+              <p class="text-xs text-slate-300 leading-relaxed mb-2">
+                จะเกิดโฟโตอิเล็กตรอนเมื่อ \(f \ge f_0\) (หรือ \(\lambda \le \lambda_0\), \(E \ge W\))
+                หาก \(f < f_0\) จะไม่เกิดอิเล็กตรอนหลุดเลย ไม่ว่าจะเพิ่มความเข้มแสงมากเพียงใด
+              </p>
+              <div
+                class="text-xs font-mono text-cyan-300 bg-black/40 p-2 rounded text-center border border-white/5 mb-3">
+                \( W = hf_0 = \frac{hc}{\lambda_0} \)
+              </div>
+              <div class="bg-blue-950/40 border border-blue-500/25 rounded-lg p-2.5 text-xs text-slate-200 space-y-1.5">
+                <div class="font-bold text-blue-300 border-b border-blue-500/20 pb-1 flex items-center gap-1">
+                  <i class="fa-solid fa-table text-xs"></i> <span>ตารางฟังก์ชันงาน \(W\) ของโลหะมาตรฐาน (สสวท.):</span>
+                </div>
+                <div class="grid grid-cols-4 gap-1.5 text-[11px] font-mono text-slate-200 pt-0.5">
+                  <div class="bg-slate-900/80 px-1.5 py-1 rounded text-center border border-white/5"><span class="text-cyan-300">Cs</span> 2.1 eV</div>
+                  <div class="bg-slate-900/80 px-1.5 py-1 rounded text-center border border-white/5"><span class="text-purple-300">K</span> 2.3 eV</div>
+                  <div class="bg-slate-900/80 px-1.5 py-1 rounded text-center border border-white/5"><span class="text-emerald-300">Na</span> 2.4 eV</div>
+                  <div class="bg-slate-900/80 px-1.5 py-1 rounded text-center border border-white/5"><span class="text-teal-300">Ca</span> 2.9 eV</div>
+                  <div class="bg-slate-900/80 px-1.5 py-1 rounded text-center border border-white/5"><span class="text-amber-300">Al</span> 4.2 eV</div>
+                  <div class="bg-slate-900/80 px-1.5 py-1 rounded text-center border border-white/5"><span class="text-rose-300">Zn</span> 4.3 eV</div>
+                  <div class="bg-slate-900/80 px-1.5 py-1 rounded text-center border border-white/5"><span class="text-orange-300">Cu</span> 4.8 eV</div>
+                  <div class="bg-slate-900/80 px-1.5 py-1 rounded text-center border border-white/5"><span class="text-yellow-300">Au</span> 5.1 eV</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Einstein Equation, Stopping Potential & Graph Slopes -->
+          <div
+            class="bg-black/30 p-4 rounded-xl border border-white/10 hover:border-purple-500/50 transition flex flex-col justify-between">
+            <div>
+              <div class="text-purple-400 font-bold text-xs mb-1 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-line"></i> 19.2.2 สมการไอน์สไตน์ ศักย์หยุดยั้ง & กราฟ
+              </div>
+              <h5 class="font-bold text-sm mb-2 text-slate-100">พลังงานจลน์สูงสุด ความต่างศักย์หยุดยั้ง & ความชันกราฟ</h5>
+              <p class="text-xs text-slate-300 leading-relaxed mb-2">
+                พลังงานส่วนเกินจากฟังก์ชันงานจะเปลี่ยนเป็นพลังงานจลน์สูงสุดของโฟโตอิเล็กตรอน
+                ซึ่งวัดได้ด้วยความต่างศักย์หยุดยั้ง \(V_s\)
+              </p>
+              <div
+                class="text-xs font-mono text-purple-300 bg-black/40 p-2 rounded text-center border border-white/5 mb-3">
+                \( E_{k,\max} = hf - W = eV_s = \frac{1}{2}m_e v_{\max}^2 \)
+              </div>
+              <div
+                class="bg-purple-950/40 border border-purple-500/25 rounded-lg p-2.5 text-xs text-slate-200 space-y-1.5">
+                <div class="font-bold text-purple-300 border-b border-purple-500/20 pb-1 flex items-center gap-1">
+                  <i class="fa-solid fa-sliders text-xs"></i> <span>สมบัติสำคัญของกราฟ สสวท.:</span>
+                </div>
+                <ul class="space-y-1 text-[11px] text-slate-300 list-disc pl-4 leading-normal">
+                  <li>กราฟ \(E_{k,\max}\)–\(f\): ความชัน \(= h\), จุดตัดแกน X \(= f_0\), จุดตัดแกน Y \(= -W\)</li>
+                  <li>กราฟ \(V_s\)–\(f\): \(V_s = \left(\frac{h}{e}\right)f - \frac{W}{e}\) ความชัน \(= \frac{h}{e}\) ขนานกันทุกโลหะ</li>
+                  <li>กราฟ \(I\)–\(\Delta V\): เพิ่มความเข้ม → \(I_{\text{sat}}\) เพิ่มแต่ \(V_s\) คงเดิม; เพิ่ม \(f\) → \(|V_s|\) เพิ่มขึ้น</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Unit Conversion (J <-> eV SVG) & Photocell Applications -->
+          <div
+            class="bg-black/30 p-4 rounded-xl border border-white/10 hover:border-emerald-500/50 transition flex flex-col justify-between">
+            <div>
+              <div class="text-emerald-400 font-bold text-xs mb-1 tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-right-left"></i> หน่วยพลังงาน (J ↔ eV) & การประยุกต์เซลล์โฟโตอิเล็กทริก
+              </div>
+              <h5 class="font-bold text-sm mb-2 text-slate-100">การเปลี่ยนหน่วยพลังงานอะตอมและเซนเซอร์แสง</h5>
+              <p class="text-xs text-slate-300 leading-relaxed mb-2">
+                แปลงหน่วยระหว่างจูล (\(\text{J}\)) กับอิเล็กตรอนโวลต์ (\(\text{eV}\)) ด้วย \(1\text{ eV} = 1.602 \times 10^{-19}\text{ J}\)
+              </p>
+
+              <!-- Themed Inline SVG Diagram (J <-> eV Conversion matching 19.1) -->
+              <div class="bg-slate-950/70 border border-emerald-500/20 rounded-lg p-2 mb-3 flex justify-center">
+                <svg class="w-full max-w-[320px] h-24" viewBox="0 0 320 96" fill="none"
+                  xmlns="http://www.w3.org/2000/svg" role="img" aria-label="แผนภาพการเปลี่ยนหน่วยจาก J เป็น eV">
+                  <defs>
+                    <linearGradient id="jCapsuleGlow" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#0f172a" />
+                      <stop offset="100%" stop-color="#082f49" />
+                    </linearGradient>
+                    <linearGradient id="evCapsuleGlow" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stop-color="#0f172a" />
+                      <stop offset="100%" stop-color="#064e3b" />
+                    </linearGradient>
+                  </defs>
+
+                  <rect x="102" y="2" width="116" height="17" rx="8.5" fill="#022c22" stroke="#10b981" stroke-width="1" />
+                  <text x="160" y="13.5" fill="#6ee7b7" font-size="9.2" font-weight="bold" font-family="Fira Code"
+                    text-anchor="middle">÷ 1.602 × 10⁻¹⁹</text>
+                  <path d="M 92 36 Q 160 20 225 36" stroke="#10b981" stroke-width="2" fill="none" />
+                  <polygon points="231,37 222,32 224,40" fill="#10b981" />
+
+                  <rect x="10" y="22" width="76" height="52" rx="12" fill="url(#jCapsuleGlow)" stroke="#38bdf8"
+                    stroke-width="1.5" />
+                  <text x="48" y="46" fill="#38bdf8" font-size="16" font-weight="bold" font-family="Fira Code"
+                    text-anchor="middle">J</text>
+                  <text x="48" y="62" fill="#94a3b8" font-size="8.5" font-family="Prompt" text-anchor="middle">จูล (SI)</text>
+
+                  <text x="160" y="51" fill="#cbd5e1" font-size="8.2" font-weight="500" font-family="Fira Code"
+                    text-anchor="middle">1 eV = 1.602×10⁻¹⁹ J</text>
+
+                  <rect x="234" y="22" width="76" height="52" rx="12" fill="url(#evCapsuleGlow)" stroke="#10b981"
+                    stroke-width="1.5" />
+                  <text x="272" y="46" fill="#34d399" font-size="16" font-weight="bold" font-family="Fira Code"
+                    text-anchor="middle">eV</text>
+                  <text x="272" y="62" fill="#94a3b8" font-size="7.5" font-family="Prompt"
+                    text-anchor="middle">อิเล็กตรอนโวลต์</text>
+
+                  <path d="M 228 60 Q 160 76 95 60" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4,3"
+                    fill="none" />
+                  <polygon points="89,59 98,64 96,56" fill="#38bdf8" />
+                  <rect x="102" y="77" width="116" height="17" rx="8.5" fill="#0f172a" stroke="#38bdf8" stroke-width="1" />
+                  <text x="160" y="88.5" fill="#7dd3fc" font-size="9.2" font-weight="bold" font-family="Fira Code"
+                    text-anchor="middle">× 1.602 × 10⁻¹⁹</text>
+                </svg>
+              </div>
+
+              <div
+                class="bg-emerald-950/40 border border-emerald-500/25 rounded-lg p-2.5 text-xs text-slate-200 space-y-1">
+                <div class="font-bold text-emerald-300 border-b border-emerald-500/20 pb-1 flex items-center gap-1">
+                  <i class="fa-solid fa-door-open text-xs"></i> <span>การประยุกต์เซลล์โฟโตอิเล็กทริก (Photocell):</span>
+                </div>
+                <ul class="space-y-1 text-[11px] text-slate-300 list-disc pl-4 leading-normal">
+                  <li>ประตูอัตโนมัติ / เซนเซอร์กันหนีบลิฟต์ (ตัดลำแสง → \(I = 0\) → รีเลย์สั่งเปิดประตู)</li>
+                  <li>เครื่องนับจำนวนสินค้าบนสายพานโรงงาน และสวิตช์เปิด-ปิดไฟถนนอัตโนมัติ</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 2: INTERACTIVE SIMULATORS (sec-review — 4 Sub-Tabs)
+         ======================================================================== -->
+    <section id="sec-review" class="hidden space-y-6 animate-[fadeIn_0.3s_ease-out]">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-800">
+            📖 ทบทวนบทเรียนและเครื่องมือจำลองปรากฏการณ์โฟโตอิเล็กทริก
+          </h2>
+          <p class="text-sm text-slate-500">
+            ทดลองปรับโลหะ ความยาวคลื่น ความเข้มแสง ความต่างศักย์ วิเคราะห์กราฟ สสวท. และการประยุกต์ประตูอัตโนมัติ
+          </p>
+        </div>
+        <button onclick="showSection('home')"
+          class="self-start sm:self-auto px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-semibold border border-slate-200 transition flex items-center gap-1.5 cursor-pointer">
+          <i class="fa-solid fa-chevron-left"></i> กลับหน้าแรก
+        </button>
+      </div>
+
+      <!-- 4 Sub-Tab Navigation Pills -->
+      <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200 overflow-x-auto">
+        <button onclick="switchReviewTab('19-2-tube')" id="btn-tab-19-2-tube"
+          class="flex-1 min-w-[160px] text-center py-2.5 text-xs md:text-sm font-bold rounded-lg transition-all duration-200 bg-white text-blue-600 shadow-sm cursor-pointer">
+          1. หลอดโฟโตอิเล็กทริก (Lab)
+        </button>
+        <button onclick="switchReviewTab('19-2-iv')" id="btn-tab-19-2-iv"
+          class="flex-1 min-w-[160px] text-center py-2.5 text-xs md:text-sm font-bold rounded-lg transition-all duration-200 text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 cursor-pointer">
+          2. กราฟกระแส I กับ ΔV
+        </button>
+        <button onclick="switchReviewTab('19-2-ekf')" id="btn-tab-19-2-ekf"
+          class="flex-1 min-w-[160px] text-center py-2.5 text-xs md:text-sm font-bold rounded-lg transition-all duration-200 text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 cursor-pointer">
+          3. กราฟ Ek,max–f & Vs–f
+        </button>
+        <button onclick="switchReviewTab('19-2-photocell')" id="btn-tab-19-2-photocell"
+          class="flex-1 min-w-[160px] text-center py-2.5 text-xs md:text-sm font-bold rounded-lg transition-all duration-200 text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 cursor-pointer">
+          4. คลื่น vs โฟตอน & ประตูอัตโนมัติ
+        </button>
+      </div>
+
+      <!-- ======================================================================
+           TAB 1: หลอดโฟโตอิเล็กทริกเสมือนจริง (Photoelectric Tube Lab)
+           ====================================================================== -->
+      <div id="review-tab-19-2-tube" class="space-y-6">
+        <div class="bg-white rounded-2xl p-5 md:p-6 shadow-sm border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <h3 class="text-lg font-bold text-cyan-700 flex items-center gap-2">
+              <i class="fa-solid fa-flask"></i> Simulator 1: หลอดโฟโตอิเล็กทริกเสมือนจริง (Photoelectric Tube Lab)
+            </h3>
+            <span class="text-xs font-mono text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+              \( E_{k,\max} = \frac{hc}{\lambda} - W = eV_s \)
+            </span>
+          </div>
+
+          <!-- Dynamic Status Banner (alerts clearly when f < f0 or stopped) -->
+          <div id="tube-status-banner"
+            class="rounded-xl px-4 py-2.5 text-xs font-semibold border bg-emerald-50 border-emerald-300 text-emerald-900 flex items-center gap-2">
+            <i class="fa-solid fa-bolt text-emerald-600"></i>
+            <span>กำลังเตรียมการจำลองหลอดโฟโตอิเล็กทริก...</span>
+          </div>
+
+          <!-- High-DPI Canvas Viewport + Calibrator Overlay -->
+          <div class="relative bg-slate-950 rounded-xl overflow-hidden border border-slate-800">
+            <div id="loader-tube"
+              class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm z-20 flex flex-col items-center justify-center transition-opacity duration-300">
+              <div class="w-10 h-10 border-4 border-cyan-500/20 border-t-cyan-400 rounded-full animate-spin mb-3"></div>
+              <div class="text-sm font-bold text-white mb-1">กำลังปรับเทียบหลอดโฟโตอิเล็กทริก (<span
+                  id="loader-tube-pct">0</span>%)</div>
+              <p id="loader-tube-status" class="text-xs text-slate-400">กำลังปรับสุญญากาศ...</p>
+              <div class="w-48 bg-slate-800 h-1.5 rounded-full overflow-hidden mt-2">
+                <div id="loader-tube-bar" class="bg-cyan-400 h-full w-0 transition-all duration-150"></div>
+              </div>
+            </div>
+
+            <canvas id="canvas-tube" class="w-full h-[380px] md:h-[420px] block"></canvas>
+          </div>
+
+          <!-- Controls Panel -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Metal Select & Intensity -->
+              <div class="space-y-3">
+                <div>
+                  <label for="select-tube-metal" class="block text-xs font-bold text-slate-700 mb-1">
+                    ชนิดโลหะแคโทด (ฟังก์ชันงาน \(W\)):
+                  </label>
+                  <select id="select-tube-metal"
+                    class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-xs font-bold text-slate-800 cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                    <option value="cs">ซีเซียม (Cs) — W = 2.1 eV (λ₀ ≈ 591 nm)</option>
+                    <option value="k">โพแทสเซียม (K) — W = 2.3 eV (λ₀ ≈ 539 nm)</option>
+                    <option value="na" selected>โซเดียม (Na) — W = 2.4 eV (λ₀ ≈ 517 nm)</option>
+                    <option value="ca">แคลเซียม (Ca) — W = 2.9 eV (λ₀ ≈ 428 nm)</option>
+                    <option value="al">อะลูมิเนียม (Al) — W = 4.2 eV (λ₀ ≈ 295 nm)</option>
+                    <option value="zn">สังกะสี (Zn) — W = 4.3 eV (λ₀ ≈ 289 nm)</option>
+                    <option value="cu">ทองแดง (Cu) — W = 4.8 eV (λ₀ ≈ 259 nm)</option>
+                    <option value="au">ทองคำ (Au) — W = 5.1 eV (λ₀ ≈ 243 nm)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="slider-tube-intensity" class="block text-xs font-bold text-slate-700 mb-1">
+                    ความเข้มแสง (จำนวนโฟตอน): <span id="lbl-tube-intensity" class="text-amber-600 font-mono">70%</span>
+                  </label>
+                  <input type="range" id="slider-tube-intensity" min="0" max="100" step="5" value="70"
+                    class="w-full accent-amber-500 cursor-pointer" />
+                  <div class="flex justify-between text-[10px] text-slate-400">
+                    <span>0% (ปิดแสง)</span><span>50%</span><span>100% (สว่างสูงสุด)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Wavelength & Voltage -->
+              <div class="space-y-3">
+                <div>
+                  <label for="slider-tube-lambda" class="block text-xs font-bold text-slate-700 mb-1">
+                    ความยาวคลื่นแสง (\(\lambda\)): <span id="lbl-tube-lambda" class="text-purple-600 font-mono">350 nm (UV)</span>
+                  </label>
+                  <input type="range" id="slider-tube-lambda" min="150" max="750" step="5" value="350"
+                    class="w-full accent-purple-600 cursor-pointer" />
+                  <div class="flex justify-between text-[10px] text-slate-400">
+                    <span>150 nm (UV)</span><span>380 nm (ม่วง)</span><span>550 nm (เขียว)</span><span>750 nm (แดง)</span>
+                  </div>
+                </div>
+
+                <div>
+                  <label for="slider-tube-voltage" class="block text-xs font-bold text-slate-700 mb-1">
+                    ความต่างศักย์ (\(\Delta V\)): <span id="lbl-tube-voltage" class="text-blue-600 font-mono">+1.00 V</span>
+                  </label>
+                  <input type="range" id="slider-tube-voltage" min="-5.0" max="5.0" step="0.05" value="1.0"
+                    class="w-full accent-blue-600 cursor-pointer" />
+                  <div class="flex justify-between text-[10px] text-slate-400">
+                    <span>-5.0 V (หน่วง)</span><span>0.0 V</span><span>+5.0 V (เร่ง)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Shortcut Buttons -->
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200">
+              <div class="flex flex-wrap items-center gap-2">
+                <button type="button" id="btn-tube-stop-v"
+                  class="px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-lg shadow-sm cursor-pointer transition flex items-center gap-1.5">
+                  <i class="fa-solid fa-bullseye"></i> ตั้งค่าที่ศักย์หยุดยั้ง (\(-V_s\))
+                </button>
+                <button type="button" id="btn-tube-play"
+                  class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-lg cursor-pointer transition">
+                  <i class="fa-solid fa-pause mr-1"></i> พักแอนิเมชัน
+                </button>
+              </div>
+              <span class="text-[11px] text-slate-500">
+                * สังเกตเมื่อปรับ \(\Delta V \le -V_s\) อิเล็กตรอนจะย้อนกลับสู่แคโทดและกระแส \(I = 0\text{ }\mu\text{A}\)
+              </span>
+            </div>
+
+            <!-- 4 Real-Time Physics Readout Cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 pt-2 border-t border-slate-200 text-xs">
+              <div class="p-2.5 bg-white rounded-xl border border-slate-200">
+                <div class="text-slate-500 text-[11px]">พลังงานโฟตอน (\(E_{\text{photon}}\))</div>
+                <div id="tube-val-photon-e" class="font-bold text-purple-600 font-mono text-sm mt-0.5">-</div>
+              </div>
+              <div class="p-2.5 bg-white rounded-xl border border-slate-200">
+                <div class="text-slate-500 text-[11px]">ฟังก์ชันงาน (\(W\)) &amp; ค่าขีดเริ่ม</div>
+                <div id="tube-val-work-f0" class="font-bold text-slate-800 font-mono text-sm mt-0.5">-</div>
+              </div>
+              <div class="p-2.5 bg-white rounded-xl border border-slate-200">
+                <div class="text-slate-500 text-[11px]">พลังงานจลน์สูงสุด (\(E_{k,\max}\)) / \(v_{\max}\)</div>
+                <div id="tube-val-ek-vmax" class="font-bold text-cyan-600 font-mono text-sm mt-0.5">-</div>
+              </div>
+              <div class="p-2.5 bg-white rounded-xl border border-slate-200">
+                <div class="text-slate-500 text-[11px]">ศักย์หยุดยั้ง (\(V_s\)) &amp; กระแส (\(I\))</div>
+                <div id="tube-val-vs-current" class="font-bold text-emerald-600 font-mono text-sm mt-0.5">-</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formula Reference Box -->
+          <div class="sim-formula-box rounded-2xl p-4 grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="sim-formula-item">
+              <div class="sim-formula-title">พลังงานโฟตอน</div>
+              <div class="sim-formula-math text-sm mt-1">\(E = hf = \frac{hc}{\lambda}\)</div>
+            </div>
+            <div class="sim-formula-item">
+              <div class="sim-formula-title">สมการไอน์สไตน์</div>
+              <div class="sim-formula-math-accent text-sm mt-1">\(E_{k,\max} = hf - W\)</div>
+            </div>
+            <div class="sim-formula-item">
+              <div class="sim-formula-title">ศักย์หยุดยั้ง &amp; อัตราเร็ว</div>
+              <div class="sim-formula-math-amber text-sm mt-1">\(eV_s = \frac{1}{2}m_e v_{\max}^2\)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================================
+           TAB 2: กราฟกระแสโฟโตอิเล็กทริกกับความต่างศักย์ (I vs ΔV)
+           ====================================================================== -->
+      <div id="review-tab-19-2-iv" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl p-5 md:p-6 shadow-sm border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <h3 class="text-lg font-bold text-blue-700 flex items-center gap-2">
+              <i class="fa-solid fa-wave-square"></i> Simulator 2: กราฟกระแสโฟโตอิเล็กทริกกับความต่างศักย์ (\(I\) vs \(\Delta V\))
+            </h3>
+            <span class="text-xs font-mono text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+              \( I(-V_s) = 0 \quad | \quad I_{\text{sat}} \propto \text{Intensity} \)
+            </span>
+          </div>
+
+          <div class="relative bg-slate-950 rounded-xl overflow-hidden border border-slate-800">
+            <div id="loader-iv"
+              class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm z-20 flex flex-col items-center justify-center transition-opacity duration-300">
+              <div class="w-10 h-10 border-4 border-blue-500/20 border-t-blue-400 rounded-full animate-spin mb-3"></div>
+              <div class="text-sm font-bold text-white mb-1">กำลังปรับเทียบกราฟ I–ΔV (<span id="loader-iv-pct">0</span>%)</div>
+              <p id="loader-iv-status" class="text-xs text-slate-400">กำลังเตรียมแกนพิกัด...</p>
+              <div class="w-48 bg-slate-800 h-1.5 rounded-full overflow-hidden mt-2">
+                <div id="loader-iv-bar" class="bg-blue-400 h-full w-0 transition-all duration-150"></div>
+              </div>
+            </div>
+            <canvas id="canvas-iv" class="w-full h-[360px] md:h-[400px] block"></canvas>
+          </div>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
+            <!-- Comparison Mode Switcher (IPST Mode A vs Mode B) -->
+            <div class="flex flex-col sm:flex-row gap-2">
+              <button type="button" id="btn-iv-mode-intensity"
+                class="flex-1 py-2 px-3 rounded-lg text-xs font-bold bg-cyan-600 text-white shadow-sm cursor-pointer transition">
+                โหมด A: เปลี่ยนความเข้มแสง (ความถี่ \(f\) คงที่)
+              </button>
+              <button type="button" id="btn-iv-mode-frequency"
+                class="flex-1 py-2 px-3 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 cursor-pointer transition">
+                โหมด B: เปลี่ยนความถี่แสง (ความเข้มคงที่)
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-3">
+                <div>
+                  <label for="select-iv-metal" class="block text-xs font-bold text-slate-700 mb-1">โลหะแคโทด:</label>
+                  <select id="select-iv-metal"
+                    class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-xs font-bold text-slate-800 cursor-pointer">
+                    <option value="cs">ซีเซียม (Cs, W = 2.1 eV)</option>
+                    <option value="k">โพแทสเซียม (K, W = 2.3 eV)</option>
+                    <option value="na" selected>โซเดียม (Na, W = 2.4 eV)</option>
+                    <option value="ca">แคลเซียม (Ca, W = 2.9 eV)</option>
+                    <option value="al">อะลูมิเนียม (Al, W = 4.2 eV)</option>
+                    <option value="zn">สังกะสี (Zn, W = 4.3 eV)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="slider-iv-lambda" class="block text-xs font-bold text-slate-700 mb-1">
+                    ความยาวคลื่นแสงหลัก (\(\lambda\)): <span id="lbl-iv-lambda" class="text-purple-600 font-mono">350 nm</span>
+                  </label>
+                  <input type="range" id="slider-iv-lambda" min="180" max="680" step="5" value="350"
+                    class="w-full accent-purple-600 cursor-pointer" />
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <div>
+                  <label for="slider-iv-intensity" class="block text-xs font-bold text-slate-700 mb-1">
+                    ความเข้มแสงหลัก: <span id="lbl-iv-intensity" class="text-amber-600 font-mono">70%</span>
+                  </label>
+                  <input type="range" id="slider-iv-intensity" min="20" max="100" step="5" value="70"
+                    class="w-full accent-amber-500 cursor-pointer" />
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between mb-1">
+                    <label for="slider-iv-voltage" class="text-xs font-bold text-slate-700">
+                      จุดทำงาน (\(\Delta V\)): <span id="lbl-iv-voltage" class="text-emerald-600 font-mono">+1.00 V</span>
+                    </label>
+                    <label class="inline-flex items-center gap-1.5 text-[11px] text-slate-600 cursor-pointer">
+                      <input type="checkbox" id="cb-iv-op-point" checked class="accent-emerald-600" />
+                      <span>แสดงจุดทำงาน</span>
+                    </label>
+                  </div>
+                  <input type="range" id="slider-iv-voltage" min="-5.0" max="5.0" step="0.1" value="1.0"
+                    class="w-full accent-emerald-600 cursor-pointer" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Readouts -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-slate-200 text-xs">
+              <div class="p-2.5 bg-white rounded-xl border border-slate-200">
+                <div class="text-slate-500 text-[11px]">จุดตัดแกนนอน (\(-V_s\))</div>
+                <div id="iv-val-vs" class="font-bold text-amber-600 font-mono text-sm">-</div>
+              </div>
+              <div class="p-2.5 bg-white rounded-xl border border-slate-200">
+                <div class="text-slate-500 text-[11px]">กระแสอิ่มตัว (\(I_{\text{sat}}\))</div>
+                <div id="iv-val-isat" class="font-bold text-cyan-600 font-mono text-sm">-</div>
+              </div>
+              <div class="p-2.5 bg-white rounded-xl border border-slate-200">
+                <div class="text-slate-500 text-[11px]">กระแส ณ จุดทำงาน (\(I\))</div>
+                <div id="iv-val-current" class="font-bold text-emerald-600 font-mono text-sm">-</div>
+              </div>
+            </div>
+
+            <div class="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-900 font-medium">
+              <i class="fa-solid fa-circle-info text-blue-600 mr-1.5"></i>
+              <strong>ข้อสรุป สสวท.:</strong> <span id="iv-val-summary">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================================
+           TAB 3: กราฟ Ek,max–f และ Vs–f (การหาค่าคงตัวของพลังค์ h)
+           ====================================================================== -->
+      <div id="review-tab-19-2-ekf" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl p-5 md:p-6 shadow-sm border border-slate-200 space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <h3 class="text-lg font-bold text-purple-700 flex items-center gap-2">
+              <i class="fa-solid fa-chart-line"></i> Simulator 3: กราฟ \(E_{k,\max}\)–\(f\) และ \(V_s\)–\(f\) (หาค่าคงตัวของพลังค์ \(h\))
+            </h3>
+            <span class="text-xs font-mono text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+              \( E_{k,\max} = hf - W \quad | \quad V_s = \left(\frac{h}{e}\right)f - \frac{W}{e} \)
+            </span>
+          </div>
+
+          <div class="relative bg-slate-950 rounded-xl overflow-hidden border border-slate-800">
+            <div id="loader-ekf"
+              class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm z-20 flex flex-col items-center justify-center transition-opacity duration-300">
+              <div class="w-10 h-10 border-4 border-purple-500/20 border-t-purple-400 rounded-full animate-spin mb-3"></div>
+              <div class="text-sm font-bold text-white mb-1">กำลังปรับเทียบกราฟ Ek,max–f (<span id="loader-ekf-pct">0</span>%)</div>
+              <p id="loader-ekf-status" class="text-xs text-slate-400">กำลังสร้างเส้นตรงเปรียบเทียบโลหะ...</p>
+              <div class="w-48 bg-slate-800 h-1.5 rounded-full overflow-hidden mt-2">
+                <div id="loader-ekf-bar" class="bg-purple-400 h-full w-0 transition-all duration-150"></div>
+              </div>
+            </div>
+            <canvas id="canvas-ekf" class="w-full h-[380px] md:h-[420px] block"></canvas>
+          </div>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
+            <!-- Axis Mode & Extrapolation Toggle -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="flex gap-2 flex-1">
+                <button type="button" id="btn-ekf-axis-ek"
+                  class="flex-1 py-2 px-3 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow-sm cursor-pointer transition">
+                  แกน Y: พลังงานจลน์สูงสุด \(E_{k,\max}\) (eV)
+                </button>
+                <button type="button" id="btn-ekf-axis-vs"
+                  class="flex-1 py-2 px-3 rounded-lg text-xs font-semibold bg-white text-slate-600 border border-slate-200 hover:bg-slate-100 cursor-pointer transition">
+                  แกน Y: ศักย์หยุดยั้ง \(V_s\) (V)
+                </button>
+              </div>
+              <label class="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 cursor-pointer">
+                <input type="checkbox" id="cb-ekf-extrapolate" checked class="accent-purple-600" />
+                <span>ต่อเส้นประตัดแกนตั้ง (\(-W\) หรือ \(-W/e\))</span>
+              </label>
+            </div>
+
+            <!-- Multi-Metal Selector (Max 3 Simultaneously) -->
+            <div class="space-y-1.5">
+              <div class="text-xs font-bold text-slate-700">
+                เลือกโลหะเปรียบเทียบพร้อมกันได้สูงสุด 3 ชนิด (พิสูจน์ว่าเส้นตรงขนานกันทุกโลหะ):
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                <button type="button" id="btn-ekf-metal-cs" class="px-2.5 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Cs (2.1 eV)</button>
+                <button type="button" id="btn-ekf-metal-k" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer">K (2.3 eV)</button>
+                <button type="button" id="btn-ekf-metal-na" class="px-2.5 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Na (2.4 eV)</button>
+                <button type="button" id="btn-ekf-metal-ca" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer">Ca (2.9 eV)</button>
+                <button type="button" id="btn-ekf-metal-al" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer">Al (4.2 eV)</button>
+                <button type="button" id="btn-ekf-metal-zn" class="px-2.5 py-1.5 rounded-lg text-xs font-bold cursor-pointer">Zn (4.3 eV)</button>
+                <button type="button" id="btn-ekf-metal-cu" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer">Cu (4.8 eV)</button>
+                <button type="button" id="btn-ekf-metal-au" class="px-2.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer">Au (5.1 eV)</button>
+              </div>
+            </div>
+
+            <!-- Interactive Frequency Probe Slider -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+              <div>
+                <label for="slider-ekf-freq" class="block text-xs font-bold text-slate-700 mb-1">
+                  ลากตัวชี้ความถี่แสง (\(f\)): <span id="lbl-ekf-freq" class="text-amber-600 font-mono">12.0 × 10¹⁴ Hz</span>
+                </label>
+                <input type="range" id="slider-ekf-freq" min="1.0" max="20.0" step="0.2" value="12.0"
+                  class="w-full accent-amber-500 cursor-pointer" />
+              </div>
+              <div class="p-3 bg-white rounded-xl border border-slate-200 text-xs">
+                <div class="text-slate-500 text-[11px]">ความชันร่วมของทุกเส้นตรง</div>
+                <div id="ekf-val-slope" class="font-bold text-purple-700 font-mono mt-0.5">h = 6.626 × 10⁻³⁴ J·s</div>
+              </div>
+            </div>
+
+            <!-- Live Multi-Metal Readout Cards -->
+            <div id="ekf-readout-cards" class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-2 border-t border-slate-200"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================================================================
+           TAB 4: ทฤษฎีคลื่น vs โฟตอน & การประยุกต์เซลล์โฟโตอิเล็กทริก
+           ====================================================================== -->
+      <div id="review-tab-19-2-photocell" class="hidden space-y-6">
+        <div class="bg-white rounded-2xl p-5 md:p-6 shadow-sm border border-slate-200 space-y-5">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <h3 class="text-lg font-bold text-emerald-700 flex items-center gap-2">
+              <i class="fa-solid fa-door-open"></i> Simulator 4: การประยุกต์เซลล์โฟโตอิเล็กทริก (ประตูอัตโนมัติ) &amp; ทฤษฎีคลื่น vs โฟตอน
+            </h3>
+            <span class="text-xs font-mono text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+              Photocell Cathode: Cs (\(W = 2.1\text{ eV}, \lambda_0 \approx 591\text{ nm}\))
+            </span>
+          </div>
+
+          <div class="relative bg-slate-950 rounded-xl overflow-hidden border border-slate-800">
+            <div id="loader-photocell"
+              class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm z-20 flex flex-col items-center justify-center transition-opacity duration-300">
+              <div class="w-10 h-10 border-4 border-emerald-500/20 border-t-emerald-400 rounded-full animate-spin mb-3"></div>
+              <div class="text-sm font-bold text-white mb-1">กำลังติดตั้งเซนเซอร์ประตูอัตโนมัติ (<span
+                  id="loader-photocell-pct">0</span>%)</div>
+              <p id="loader-photocell-status" class="text-xs text-slate-400">กำลังเชื่อมต่อรีเลย์...</p>
+              <div class="w-48 bg-slate-800 h-1.5 rounded-full overflow-hidden mt-2">
+                <div id="loader-photocell-bar" class="bg-emerald-400 h-full w-0 transition-all duration-150"></div>
+              </div>
+            </div>
+            <canvas id="canvas-photocell" class="w-full h-[360px] md:h-[400px] block"></canvas>
+          </div>
+
+          <!-- Interactive Photocell Controls -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div class="flex flex-wrap items-center gap-2">
+                <button type="button" id="btn-cell-walk"
+                  class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg shadow-sm cursor-pointer transition flex items-center gap-1.5">
+                  <i class="fa-solid fa-person-walking"></i> จำลองคนเดินผ่านลำแสง
+                </button>
+                <button type="button" id="btn-cell-block"
+                  class="px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-lg cursor-pointer transition">
+                  <i class="fa-solid fa-hand mr-1"></i> บังลำแสงค้างไว้
+                </button>
+                <button type="button" id="btn-cell-reset"
+                  class="px-3 py-2 bg-white hover:bg-slate-100 text-slate-700 font-semibold text-xs rounded-lg border border-slate-300 cursor-pointer transition">
+                  <i class="fa-solid fa-rotate-left mr-1"></i> รีเซ็ต
+                </button>
+              </div>
+
+              <div class="flex-1 max-w-sm">
+                <label for="slider-cell-lambda" class="block text-xs font-bold text-slate-700 mb-1">
+                  ความยาวคลื่นลำแสงเซนเซอร์: <span id="lbl-cell-lambda" class="text-blue-600 font-mono">450 nm</span>
+                </label>
+                <input type="range" id="slider-cell-lambda" min="280" max="700" step="10" value="450"
+                  class="w-full accent-emerald-600 cursor-pointer" />
+                <div class="flex justify-between text-[10px] text-slate-400">
+                  <span>280 nm (UV)</span><span>591 nm (λ₀ ของ Cs)</span><span>700 nm (แดง: ไม่เกิด I)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs pt-2 border-t border-slate-200">
+              <div class="p-2.5 bg-white rounded-xl border border-slate-200">
+                <div class="text-slate-500 text-[11px]">กระแสเซลล์โฟโตอิเล็กทริก</div>
+                <div id="cell-val-current" class="font-bold font-mono text-emerald-600">85.0 µA</div>
+              </div>
+              <div class="p-2.5 bg-white rounded-xl border border-slate-200">
+                <div class="text-slate-500 text-[11px]">สถานะวงจรรีเลย์</div>
+                <div id="cell-val-relay" class="font-bold text-slate-800">กระแสเลี้ยงปกติ</div>
+              </div>
+              <div class="p-2.5 bg-white rounded-xl border border-slate-200">
+                <div class="text-slate-500 text-[11px]">สถานะประตูอัตโนมัติ</div>
+                <div id="cell-val-door" class="font-bold text-blue-600">ปิดปกติ</div>
+              </div>
+              <div class="p-2.5 bg-white rounded-xl border border-slate-200">
+                <div class="text-slate-500 text-[11px]">จำนวนครั้งที่ตรวจจับ</div>
+                <div id="cell-val-count" class="font-bold font-mono text-purple-600">0 ครั้ง</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Comparison Table: Classical Wave Theory vs Einstein Photon Theory (สสวท.) -->
+          <div class="space-y-3 pt-2">
+            <h4 class="text-base font-bold text-slate-800 flex items-center gap-2">
+              <i class="fa-solid fa-scale-balanced text-indigo-600"></i>
+              ตารางเปรียบเทียบ: ข้อจำกัดของทฤษฎีคลื่นแม่เหล็กไฟฟ้าดั้งเดิม vs คำอธิบายด้วยโฟตอนของไอน์สไตน์ (สสวท.)
+            </h4>
+            <div class="overflow-x-auto rounded-xl border border-slate-200">
+              <table class="w-full text-xs text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-900 text-white">
+                    <th class="p-3 font-bold w-1/5">ประเด็นการทดลอง</th>
+                    <th class="p-3 font-bold w-2/5 text-rose-300">คำทำนายของทฤษฎีคลื่นดั้งเดิม (ขัดแย้ง)</th>
+                    <th class="p-3 font-bold w-2/5 text-emerald-300">ผลการทดลองจริง &amp; คำอธิบายของไอน์สไตน์</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 bg-white">
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-bold text-slate-800">1. การมีอยู่ของความถี่ขีดเริ่ม (\(f_0\))</td>
+                    <td class="p-3 text-slate-600">แสงทุกความถี่ควรทำให้อิเล็กตรอนหลุดได้ ขอเพียงเพิ่มความเข้มแสงให้มากพอ ไม่ควรมีความถี่ขีดเริ่ม</td>
+                    <td class="p-3 text-slate-800"><strong>มีค่าความถี่ขีดเริ่ม \(f_0\) เฉพาะตัวของโลหะ</strong> หาก \(f < f_0\) โฟตอนมีพลังงาน \(hf < W\) จึงไม่เกิดโฟโตอิเล็กตรอนเลย แม้เพิ่มความเข้มสูงมาก</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-bold text-slate-800">2. พลังงานจลน์สูงสุด (\(E_{k,\max}\)) กับความเข้มแสง</td>
+                    <td class="p-3 text-slate-600">เมื่อเพิ่มความเข้มแสง แอมพลิจูดคลื่นเพิ่มขึ้น ควรส่งผลให้ \(E_{k,\max}\) และศักย์หยุดยั้ง \(V_s\) เพิ่มขึ้นด้วย</td>
+                    <td class="p-3 text-slate-800"><strong>\(E_{k,\max}\) ไม่ขึ้นกับความเข้มแสง แต่ขึ้นกับความถี่ \(f\) เท่านั้น</strong> (\(E_{k,\max} = hf - W\)) ความเข้มแสงเพิ่มเฉพาะจำนวนโฟตอน (เพิ่ม \(I_{\text{sat}}\))</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 font-bold text-slate-800">3. ระยะเวลาที่อิเล็กตรอนหลุด</td>
+                    <td class="p-3 text-slate-600">หากฉายแสงความเข้มต่ำมาก อิเล็กตรอนต้องใช้เวลาสะสมพลังงานจากหน้าคลื่นนานเป็นวินาทีหรือนาทีก่อนหลุด</td>
+                    <td class="p-3 text-slate-800"><strong>อิเล็กตรอนหลุดเกือบจะทันที (\(< 10^{-9}\text{ s}\))</strong> เมื่อ \(f \ge f_0\) เพราะโฟตอน 1 อนุภาคถ่ายโอนพลังงานทั้งก้อน \(hf\) ให้อิเล็กตรอน 1 ตัวทันที</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 3: PRACTICE & DYNAMIC RNG QUIZ (sec-practice)
+         ======================================================================== -->
+    <section id="sec-practice" class="hidden space-y-6 animate-[fadeIn_0.3s_ease-out]">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-800">
+            🧠 ตะลุยโจทย์: ปรากฏการณ์โฟโตอิเล็กทริก (Photoelectric Effect)
+          </h2>
+          <p class="text-sm text-slate-500">
+            ระบบสุ่มตัวแปรตามเลขที่และโจทย์มาตรฐาน อิงตามหนังสือเรียน สสวท. บทที่ 19.2 (19.2.1 – 19.2.3)
+          </p>
+        </div>
+        <button onclick="showSection('home')"
+          class="self-start sm:self-auto px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-semibold border border-slate-200 transition flex items-center gap-1.5 cursor-pointer">
+          <i class="fa-solid fa-chevron-left"></i> กลับหน้าแรก
+        </button>
+      </div>
+
+      <!-- Stats Bar (4 Cards) -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div
+          class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all flex items-center gap-3.5">
+          <div
+            class="w-11 h-11 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-lg shrink-0 border border-blue-100 shadow-inner">
+            <i class="fa-solid fa-clipboard-question"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="text-xl md:text-2xl font-extrabold text-slate-800 font-mono tracking-tight leading-none mb-1">
+              <span>15</span> <span class="text-xs font-sans font-semibold text-slate-500">ข้อ</span>
+            </div>
+            <div class="text-xs font-bold text-slate-700 truncate">คลังโจทย์ทั้งหมด</div>
+            <div class="text-[10px] text-slate-400 font-medium truncate mt-0.5">บทที่ 19.2 ม.6</div>
+          </div>
+        </div>
+
+        <div
+          class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-cyan-300 transition-all flex items-center gap-3.5">
+          <div
+            class="w-11 h-11 bg-cyan-50 text-cyan-600 rounded-xl flex items-center justify-center text-lg shrink-0 border border-cyan-100 shadow-inner">
+            <i class="fa-solid fa-layer-group"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="text-xl md:text-2xl font-extrabold text-slate-800 font-mono tracking-tight leading-none mb-1">
+              3 <span class="text-xs font-sans font-semibold text-slate-500">หัวข้อ</span>
+            </div>
+            <div class="text-xs font-bold text-slate-700 truncate">หมวดหมู่เนื้อหา</div>
+            <div class="text-[10px] text-slate-400 font-medium truncate mt-0.5">19.2.1 – 19.2.3 สสวท.</div>
+          </div>
+        </div>
+
+        <div
+          class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all flex items-center gap-3.5">
+          <div
+            class="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-lg shrink-0 border border-emerald-100 shadow-inner">
+            <i class="fa-solid fa-shuffle"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="text-xl md:text-2xl font-extrabold text-slate-800 font-mono tracking-tight leading-none mb-1">
+              2 <span class="text-xs font-sans font-semibold text-slate-500">รูปแบบ</span>
+            </div>
+            <div class="text-xs font-bold text-slate-700 truncate">รูปแบบการฝึกฝน</div>
+            <div class="text-[10px] text-slate-400 font-medium truncate mt-0.5">ปกติ / สุ่มตัวเลข (0% Repeat)</div>
+          </div>
+        </div>
+
+        <div
+          class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md hover:border-amber-300 transition-all flex items-center gap-3.5">
+          <div
+            class="w-11 h-11 bg-amber-50 text-amber-500 rounded-xl flex items-center justify-center text-lg shrink-0 border border-amber-100 shadow-inner">
+            <i class="fa-solid fa-lightbulb"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="text-xl md:text-2xl font-extrabold text-slate-800 font-mono tracking-tight leading-none mb-1">
+              100%
+            </div>
+            <div class="text-xs font-bold text-slate-700 truncate">เฉลยวิธีทำละเอียด</div>
+            <div class="text-[10px] text-slate-400 font-medium truncate mt-0.5">Step-by-Step KaTeX</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Topic Selector Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <button onclick="startPracticeMode('19.2.1')" id="btn-prac-19-2-1"
+          class="p-4 bg-white hover:bg-blue-50 text-slate-800 rounded-xl border border-slate-200 flex items-center gap-3 transition text-left shadow-sm hover:shadow cursor-pointer">
+          <div
+            class="w-11 h-11 shrink-0 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 text-xs font-bold">
+            19.2.1
+          </div>
+          <div>
+            <h4 class="font-bold text-xs">โฟตอน ความถี่ขีดเริ่ม &amp; ฟังก์ชันงาน</h4>
+            <p class="text-[10px] text-slate-500">คำนวณ \(E = \frac{hc}{\lambda}\), \(W = hf_0 = \frac{hc}{\lambda_0}\)</p>
+          </div>
+        </button>
+
+        <button onclick="startPracticeMode('19.2.2')" id="btn-prac-19-2-2"
+          class="p-4 bg-white hover:bg-cyan-50 text-slate-800 rounded-xl border border-slate-200 flex items-center gap-3 transition text-left shadow-sm hover:shadow cursor-pointer">
+          <div
+            class="w-11 h-11 shrink-0 bg-cyan-100 rounded-lg flex items-center justify-center text-cyan-600 text-xs font-bold">
+            19.2.2
+          </div>
+          <div>
+            <h4 class="font-bold text-xs">สมการไอน์สไตน์ &amp; ศักย์หยุดยั้ง</h4>
+            <p class="text-[10px] text-slate-500">คำนวณ \(E_{k,\max} = hf - W\), \(V_s\) และ \(v_{\max}\)</p>
+          </div>
+        </button>
+
+        <button onclick="startPracticeMode('19.2.3')" id="btn-prac-19-2-3"
+          class="p-4 bg-white hover:bg-amber-50 text-slate-800 rounded-xl border border-slate-200 flex items-center gap-3 transition text-left shadow-sm hover:shadow cursor-pointer">
+          <div
+            class="w-11 h-11 shrink-0 bg-amber-100 rounded-lg flex items-center justify-center text-amber-600 text-xs font-bold">
+            19.2.3
+          </div>
+          <div>
+            <h4 class="font-bold text-xs">การวิเคราะห์กราฟและการประยุกต์</h4>
+            <p class="text-[10px] text-slate-500">ความชัน \(h\), \(h/e\), กราฟ \(I\)–\(\Delta V\) &amp; Photocell</p>
+          </div>
+        </button>
+      </div>
+
+      <!-- Practice Arena Card -->
+      <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-200 space-y-6">
+        <!-- Control Bar -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+          <div class="flex items-center gap-2">
+            <label for="prac-student-roll" class="text-xs font-bold text-slate-600">เลขที่ของคุณ:</label>
+            <input type="number" id="prac-student-roll" min="1" max="40" value="1"
+              class="w-16 px-2.5 py-1 text-center font-mono font-bold text-sm bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            <span class="text-xs text-slate-400 font-mono">(R = 1–40)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="prac-mode-select"
+              class="text-xs font-bold border border-slate-300 rounded-lg px-3 py-1.5 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+              <option value="standard" selected>โจทย์ตัวเลขคงที่ (มาตรฐาน สสวท.)</option>
+              <option value="random">โจทย์สุ่มตัวเลข (RNG ตามเลขที่)</option>
+            </select>
+            <button onclick="regeneratePractice()"
+              class="text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-lg transition flex items-center gap-1 cursor-pointer">
+              <i class="fa-solid fa-rotate"></i> ข้อต่อไป
+            </button>
+          </div>
+        </div>
+
+        <!-- Question Display -->
+        <div class="bg-slate-50 p-5 md:p-8 rounded-2xl border border-slate-200">
+          <span class="text-[11px] text-slate-400 font-bold uppercase tracking-wider block mb-3"
+            id="prac-question-title">📋 ข้อคำถาม:</span>
+          <p id="prac-question-text" class="text-base md:text-lg text-slate-800 font-medium leading-relaxed math-font">
+            - กำลังสร้างโจทย์ -
+          </p>
+        </div>
+
+        <!-- User Answer Form -->
+        <div class="space-y-4 max-w-2xl mx-auto">
+          <h4 class="font-bold text-sm text-slate-700 text-center mb-4">✍️ ระบุคำตอบของคุณ</h4>
+
+          <!-- Choice Zone -->
+          <div id="prac-choice-zone" class="grid grid-cols-1 gap-3 hidden"></div>
+
+          <!-- Numeric / Multi-Numeric Zone -->
+          <div id="prac-numeric-zone" class="space-y-4 max-w-lg mx-auto flex flex-col items-center">
+            <!-- Single Numeric Input -->
+            <div id="prac-single-input-wrap" class="w-full max-w-md">
+              <label id="lbl-prac-input-1" for="prac-input-val1"
+                class="block text-xs font-bold text-slate-600 mb-1.5 text-center">คำตอบ:</label>
+              <div
+                class="flex items-stretch rounded-xl border-2 border-slate-200 focus-within:border-slate-500 focus-within:ring-4 focus-within:ring-slate-500/10 bg-white overflow-hidden transition">
+                <input type="text" inputmode="decimal" autocomplete="off" id="prac-input-val1"
+                  placeholder="ระบุตัวเลขคำตอบ"
+                  class="flex-1 min-w-0 px-4 py-3 text-center font-mono text-lg focus:outline-none bg-transparent" />
+                <span id="prac-unit-badge-1"
+                  class="px-3.5 py-3 bg-slate-100 border-l border-slate-200 text-slate-700 font-mono font-bold text-sm flex items-center justify-center shrink-0 whitespace-nowrap">
+                  -
+                </span>
+              </div>
+            </div>
+
+            <!-- Multi-Numeric Input (2-part questions) -->
+            <div id="prac-multi-numeric-zone" class="hidden w-full grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="bg-slate-50/70 p-3.5 rounded-xl border border-slate-200">
+                <label id="lbl-prac-multi-1" for="prac-multi-input-1"
+                  class="block text-xs font-bold text-slate-700 mb-2 text-center">คำตอบที่ 1:</label>
+                <div
+                  class="flex items-stretch rounded-xl border-2 border-slate-200 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10 bg-white overflow-hidden transition">
+                  <input type="text" inputmode="decimal" autocomplete="off" id="prac-multi-input-1"
+                    placeholder="ตัวเลขคำตอบที่ 1"
+                    class="flex-1 min-w-0 px-3 py-2.5 text-center font-mono text-base focus:outline-none bg-transparent" />
+                  <span id="prac-multi-unit-1"
+                    class="px-3 py-2.5 bg-slate-100 border-l border-slate-200 text-slate-700 font-mono font-bold text-xs flex items-center justify-center shrink-0 whitespace-nowrap">
+                    -
+                  </span>
+                </div>
+              </div>
+              <div class="bg-slate-50/70 p-3.5 rounded-xl border border-slate-200">
+                <label id="lbl-prac-multi-2" for="prac-multi-input-2"
+                  class="block text-xs font-bold text-slate-700 mb-2 text-center">คำตอบที่ 2:</label>
+                <div
+                  class="flex items-stretch rounded-xl border-2 border-slate-200 focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-500/10 bg-white overflow-hidden transition">
+                  <input type="text" inputmode="decimal" autocomplete="off" id="prac-multi-input-2"
+                    placeholder="ตัวเลขคำตอบที่ 2"
+                    class="flex-1 min-w-0 px-3 py-2.5 text-center font-mono text-base focus:outline-none bg-transparent" />
+                  <span id="prac-multi-unit-2"
+                    class="px-3 py-2.5 bg-slate-100 border-l border-slate-200 text-slate-700 font-mono font-bold text-xs flex items-center justify-center shrink-0 whitespace-nowrap">
+                    -
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex gap-3 w-full max-w-md">
+              <button id="btn-prac-skip" onclick="regeneratePractice()"
+                class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition border border-slate-200 cursor-pointer">
+                ข้ามข้อนี้
+              </button>
+              <button id="btn-prac-check" onclick="checkPracticeAnswer()"
+                class="flex-1 py-3 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl shadow-md transition cursor-pointer flex items-center justify-center gap-1.5">
+                <i class="fa-solid fa-check"></i> ตรวจคำตอบ
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feedback & Step-by-Step KaTeX Explanation -->
+        <div id="prac-feedback" class="hidden p-5 rounded-2xl border transition-all duration-300"></div>
+        <div id="prac-explanation-box"
+          class="hidden space-y-4 bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-inner">
+          <h5 class="font-bold text-slate-800 text-sm border-b border-slate-200 pb-2 flex items-center gap-2">
+            <i class="fa-solid fa-lightbulb text-blue-600"></i> เฉลยและวิธีทำละเอียด:
+          </h5>
+          <div id="prac-explanation-text" class="text-sm text-slate-700 space-y-3 math-font leading-relaxed"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 4: EXAM REGISTRATION / START (sec-exam-start)
+         ======================================================================== -->
+    <section id="sec-exam-start" class="hidden max-w-xl mx-auto space-y-6 animate-[fadeIn_0.3s_ease-out]">
+      <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-xl space-y-6">
+        <div class="text-center space-y-2">
+          <div
+            class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-2">
+            <i class="fa-solid fa-stopwatch"></i>
+          </div>
+          <h2 class="text-xl md:text-2xl font-extrabold text-slate-900">
+            แบบทดสอบเก็บคะแนนบทที่ 19.2
+          </h2>
+          <p class="text-xs md:text-sm text-slate-500">
+            ปรากฏการณ์โฟโตอิเล็กทริก (5 ข้อ 10 คะแนน | เวลา 15 นาที)
+          </p>
+        </div>
+
+        <div class="bg-red-50 p-4 rounded-2xl border border-red-200 space-y-2 text-xs text-red-900">
+          <div class="font-bold text-red-800 border-b border-red-200 pb-1.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-triangle-exclamation text-red-600"></i> กติกาการสอบ (อ่านก่อนเริ่ม):
+          </div>
+          <ul class="list-disc pl-4 space-y-1">
+            <li>มีข้อสอบทั้งหมด <strong>5 ข้อ ข้อละ 2 คะแนน</strong> (คะแนนเต็ม 10 คะแนน, เกณฑ์ผ่าน 6 คะแนน / 60%)</li>
+            <li>ขอบเขตเนื้อหา: <strong>19.2 ปรากฏการณ์โฟโตอิเล็กทริก</strong> (ฟังก์ชันงาน \(W\), ความถี่ขีดเริ่ม \(f_0\), สมการไอน์สไตน์, \(V_s\), \(v_{\max}\) และการวิเคราะห์กราฟ)</li>
+            <li>มีระยะเวลาจำกัดในการทำข้อสอบ <strong>15:00 นาที</strong> (นาฬิกาเริ่มเดินเมื่อกด "เริ่มทำข้อสอบ" และบังคับส่งทันทีเมื่อหมดเวลา)</li>
+            <li>ข้อสอบคำนวณตัวเลขให้ป้อนคำตอบเป็นทศนิยมไม่เกิน 2 ตำแหน่ง (อนุญาตความคลาดเคลื่อนไม่เกิน <strong>±3%</strong>)</li>
+            <li>ระบบบันทึกสถานะไว้ตลอด หากรีเฟรชหน้าจอสามารถสอบต่อในเวลาที่เหลือได้ (แต่หากหมดเวลาแล้ว ระบบจะตรวจให้อัตโนมัติ)</li>
+            <li>ระบบจะตรวจจับและบันทึกการสลับแท็บหรือสลับหน้าต่างระหว่างทำข้อสอบ และล็อกการออกจากหน้าสอบจนกว่าจะส่งคำตอบ</li>
+          </ul>
+        </div>
+
+        <form onsubmit="event.preventDefault(); startLiveExam();" class="space-y-4">
+          <div>
+            <label for="exam-input-name" class="block text-xs font-bold text-slate-700 mb-1">ชื่อ - นามสกุล ผู้เข้าสอบ:</label>
+            <input type="text" id="exam-input-name" required placeholder="เช่น นายสมชาย ใจดี"
+              class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+            <p id="exam-err-name" class="hidden text-[11px] text-red-600 mt-1">กรุณากรอกชื่อ-นามสกุลผู้เข้าสอบ</p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label for="exam-input-class" class="block text-xs font-bold text-slate-700 mb-1">ชั้นเรียน / ห้อง:</label>
+              <input type="text" id="exam-input-class" required placeholder="เช่น ม.6/1" value="ม.6/1"
+                class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+            </div>
+            <div>
+              <label for="exam-input-roll" class="block text-xs font-bold text-slate-700 mb-1">เลขที่ (1 – 40):</label>
+              <input type="number" id="exam-input-roll" min="1" max="40" required value="1"
+                class="w-full px-4 py-2.5 border border-slate-300 rounded-xl text-sm font-bold text-center focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+              <p id="exam-err-roll" class="hidden text-[11px] text-red-600 mt-1">กรุณาระบุเลขที่ 1 ถึง 40</p>
+            </div>
+          </div>
+
+          <div class="pt-3">
+            <button type="submit" id="btn-exam-start-submit" disabled
+              class="w-full py-3.5 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-2xl shadow-lg transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer">
+              <span>เริ่มทำข้อสอบ</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </form>
+
+        <div class="text-center pt-2">
+          <button onclick="showSection('home')"
+            class="text-xs text-slate-500 hover:text-slate-800 transition cursor-pointer">
+            <i class="fa-solid fa-chevron-left mr-1"></i> ยกเลิกและกลับหน้าแรก
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 5: LIVE EXAM ROOM (sec-exam-live)
+         ======================================================================== -->
+    <section id="sec-exam-live" class="hidden space-y-6 relative animate-[fadeIn_0.2s_ease-out]">
+      <!-- Sticky Live Exam Top Bar -->
+      <div
+        class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3 sticky top-20 z-30">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-red-500 animate-pulse"></span>
+          <span id="exam-live-student-info" class="font-bold text-xs md:text-sm text-slate-800">
+            ผู้เข้าสอบ: -
+          </span>
+        </div>
+
+        <!-- Question Pager Buttons (1 to 5) -->
+        <div id="exam-question-pager" class="flex items-center gap-1.5"></div>
+
+        <!-- Timer Display -->
+        <div class="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
+          <i class="fa-solid fa-clock text-slate-500 text-xs"></i>
+          <span class="text-xs text-slate-500">เวลาที่เหลือ:</span>
+          <span id="exam-timer-display" class="font-mono font-bold text-base text-red-600">15:00</span>
+        </div>
+      </div>
+
+      <!-- Live Question Card -->
+      <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+        <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+          <h3 id="exam-q-title" class="font-bold text-base text-slate-900">ข้อที่ - :</h3>
+          <span class="text-xs font-semibold text-slate-500">คะแนนเต็ม 2 คะแนน</span>
+        </div>
+
+        <p id="exam-q-text" class="text-sm md:text-base text-slate-700 leading-relaxed math-font">
+          กำลังเตรียมข้อสอบ...
+        </p>
+
+        <!-- Q1 Multiple Choice Zone -->
+        <div id="exam-zone-choice" class="space-y-2.5 hidden"></div>
+
+        <!-- Q2-Q5 Numeric Input Zone -->
+        <div id="exam-zone-numeric" class="hidden bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2">
+          <label for="exam-input-numeric" class="block text-xs font-bold text-slate-700">
+            กรอกตัวเลขคำตอบของคุณ (หน่วย: <span id="exam-lbl-numeric-unit" class="text-blue-600 font-bold">-</span>):
+          </label>
+          <div
+            class="flex items-stretch rounded-xl border border-slate-300 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 bg-white overflow-hidden transition">
+            <input type="number" step="any" id="exam-input-numeric" placeholder="ตัวอย่าง: 1.74 หรือ 590.9"
+              class="flex-1 min-w-0 px-4 py-3 bg-transparent text-base font-mono focus:outline-none" />
+            <span id="exam-unit-badge"
+              class="px-4 py-3 bg-slate-100 border-l border-slate-200 text-slate-700 font-mono font-bold text-sm flex items-center justify-center shrink-0 whitespace-nowrap">
+              -
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-500">
+            * ป้อนทศนิยมไม่เกิน 2 ตำแหน่ง (เกณฑ์การตรวจอนุญาตความคลาดเคลื่อนไม่เกิน ±3%)
+          </p>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+          <button id="btn-exam-prev" onclick="prevExamQuestion()"
+            class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer flex items-center gap-1.5">
+            <i class="fa-solid fa-chevron-left"></i> <span>ข้อย้อนหลัง</span>
+          </button>
+          <button id="btn-exam-next" onclick="nextExamQuestion()"
+            class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition shadow cursor-pointer flex items-center gap-1.5">
+            <span>ข้อถัดไป</span> <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         SECTION 6: EXAM RESULT (sec-exam-result)
+         ======================================================================== -->
+    <section id="sec-exam-result" class="hidden max-w-4xl mx-auto space-y-6 animate-[fadeIn_0.5s_ease-out]">
+      <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-xl space-y-6">
+        <div class="text-center space-y-3 pb-4 border-b border-slate-100">
+          <div class="inline-flex p-3 rounded-2xl bg-blue-50 text-blue-600 text-3xl mb-1">
+            <i class="fa-solid fa-award"></i>
+          </div>
+          <h2 class="text-2xl font-extrabold text-slate-900">
+            รายงานผลการทดสอบเก็บคะแนนบทที่ 19.2
+          </h2>
+          <p id="res-student-info" class="text-xs md:text-sm text-slate-500 font-medium">ผู้เข้าสอบ: -</p>
+
+          <div class="flex items-center justify-center gap-6 py-2">
+            <div>
+              <div id="res-score-value" class="text-4xl md:text-5xl font-black text-blue-600 font-mono">0 / 10</div>
+              <div class="text-xs text-slate-500 mt-1">คะแนนรวมที่ได้</div>
+            </div>
+            <div class="h-12 w-px bg-slate-200"></div>
+            <div>
+              <div id="res-score-pct" class="text-4xl md:text-5xl font-black text-slate-800 font-mono">0%</div>
+              <div class="text-xs text-slate-500 mt-1">ร้อยละความถูกต้อง</div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center gap-2 pt-1 flex-wrap">
+            <span id="res-badge-grade"
+              class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+              ผ่านเกณฑ์
+            </span>
+            <span id="res-tab-switches"
+              class="px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 border border-slate-200">
+              ความโปร่งใส 100%
+            </span>
+          </div>
+
+          <div id="res-auto-submit-banner"
+            class="hidden mt-3 p-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold">
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <h4 class="font-bold text-sm text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-list-check text-blue-600"></i> ผลการตรวจคำตอบรายข้อ:
+          </h4>
+          <div id="res-breakdown-list" class="space-y-3"></div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-slate-100">
+          <button onclick="retakeExam()"
+            class="w-full sm:w-auto px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-arrow-rotate-left"></i> <span>สอบใหม่อีกครั้ง</span>
+          </button>
+
+          <button onclick="showSection('home')"
+            class="w-full sm:w-auto px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition shadow cursor-pointer flex items-center justify-center gap-1.5">
+            <i class="fa-solid fa-house"></i> <span>กลับหน้าแรก</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       MODALS & ANTI-CHEAT WARNING TOAST
+       ========================================================================== -->
+  <div id="cheat-warning-banner" class="hidden">
+    <div class="flex items-start gap-3">
+      <div class="cheat-warning-icon-box">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+      </div>
+      <div>
+        <span class="cheat-warning-badge">Anti-Cheat Alert</span>
+        <div id="cheat-warning-msg" class="cheat-warning-msg">ระบบตรวจพบการสลับหน้าต่าง!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Latest Result Modal -->
+  <div id="latest-result-modal"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+    <div
+      class="bg-white max-w-sm w-full rounded-3xl p-6 shadow-2xl border border-slate-200 space-y-4 animate-[fadeIn_0.2s_ease-out]">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+        <h3 class="font-bold text-sm text-slate-800">ผลสอบล่าสุดของคุณ</h3>
+        <button onclick="closeLatestResultModal()" class="text-slate-400 hover:text-slate-600 text-sm cursor-pointer">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div id="modal-latest-result-content" class="space-y-3"></div>
+      <button onclick="closeLatestResultModal()"
+        class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition cursor-pointer">
+        ปิดหน้าต่าง
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="bg-[#070b14] text-slate-400 py-10 border-t border-slate-800/80 mt-12 text-center">
+    <div class="max-w-5xl mx-auto px-4 flex flex-col items-center space-y-2">
+      <div class="font-bold text-slate-100 text-xs sm:text-sm md:text-base tracking-wide">
+        รายวิชา ฟิสิกส์ 6 รหัสวิชา ว33206 โรงเรียนห้องสอนศึกษา ในพระอุปถัมภ์ฯ
+      </div>
+      <p class="text-[11px] sm:text-xs md:text-sm text-slate-400">
+        บทที่ 19 ฟิสิกส์อะตอม (19.2 ปรากฏการณ์โฟโตอิเล็กทริก) ตามหลักสูตรแกนกลางการศึกษาขั้นพื้นฐาน
+        (ฉบับปรับปรุง พ.ศ. 2560) สสวท.
+      </p>
+      <div class="flex items-center justify-center flex-wrap gap-2 text-xs text-slate-400 pt-1">
+        <span class="text-cyan-400 font-mono font-bold">&lt;/&gt;</span>
+        <span class="font-mono text-slate-300">DEV: Nopphorn Somboonchai</span>
+        <span class="text-slate-600">·</span>
+        <span class="inline-flex items-center gap-1.5 text-cyan-400">
+          <svg class="w-4 h-4 inline-block text-cyan-400" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2L3.5 6.87v9.74L12 21.5l8.5-4.89V6.87L12 2zm0 2.24l6.5 3.73v7.46L12 19.16l-6.5-3.73V7.97L12 4.24z" />
+          </svg>
+          <span class="text-slate-300 font-sans">Physics Standard v1.13.0</span>
+        </span>
+      </div>
+      <p class="text-[10px] sm:text-[11px] text-slate-500 pt-0.5">
+        © 2026 Interactive Physics Learning Portal. สงวนลิขสิทธิ์เพื่อการศึกษา
+      </p>
+    </div>
+  </footer>
+
+  <!-- Production esbuild Bundle -->
+  <script src="./dist/bundle.js"></script>
+</body>
+
+</html>
