@@ -242,13 +242,12 @@ flowchart TD
 ```text
 Unit-19-Physics-Atom-19.2/
 ├── .agents/skills/                         # Physics Learning Standard v1.13.0 & Compliance Scripts
-├── .github/workflows/deploy.yml            # GitHub Pages CI/CD auto-deploy workflow
 ├── assets/styles/
 │   ├── animations.css                      # Keyframes, Glow, Timer Urgent, Reduced Motion
 │   ├── main.css                            # Tailwind CSS v4 + Engineering Grid Theme + Anti-Cheat Toast
 │   └── style.css                           # Compiled Tailwind CSS
-├── dist/                                   # Generated on build (gitignored)
-│   └── bundle.js                           # Production esbuild bundle
+├── dist/
+│   └── bundle.js                           # Production esbuild bundle (generated via npm run build)
 ├── src/
 │   ├── main.js                             # Entry point, DI wiring, Error Boundary, KaTeX init
 │   ├── shared/
@@ -312,7 +311,7 @@ Unit-19-Physics-Atom-19.2/
 
 ## 8.1 ความต้องการของระบบและเทคโนโลยีที่ใช้ (Tech Stack)
 
-- [Node.js](https://nodejs.org/) เวอร์ชัน `18.0.0` ขึ้นไป (แนะนำ Node.js 20 LTS ตาม CI workflow)
+- [Node.js](https://nodejs.org/) เวอร์ชัน `18.0.0` ขึ้นไป (แนะนำ Node.js 20 LTS)
 - เว็บเบราว์เซอร์สมัยใหม่ที่รองรับ ES Modules และ HTML5 Canvas 2D
 
 | เทคโนโลยี / ไลบรารี | หน้าที่ในระบบ | แหล่งโหลด (Runtime) |
@@ -348,9 +347,9 @@ npm run serve
 | `npm test` | รัน Node.js unit/integration tests ทั้ง 6 ไฟล์ต่อเนื่องกัน |
 | `npm run test:e2e` | รัน E2E smoke test บน Chromium ผ่าน `e2e.config.ts` |
 
-## 8.3 การเผยแพร่ผ่าน GitHub Pages (CI/CD)
+## 8.3 การเผยแพร่ผ่าน GitHub Pages
 
-ไฟล์ [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) จะทำงานอัตโนมัติเมื่อมีการ Push ไปยัง branch `main` (หรือสั่งรันผ่าน `workflow_dispatch`) โดยติดตั้งแพ็กเกจด้วย `npm ci`, สั่ง `npm run build`, รวมไฟล์ `index.html`, `dist/`, `assets/`, `vendor/` และสร้าง `.nojekyll` เพื่อ Deploy ขึ้น GitHub Pages
+โปรเจกต์นี้เผยแพร่แบบ Static Site จาก branch `main` โดยตรง (ต้องรัน `npm run build` เพื่ออัปเดต `assets/styles/style.css` และ `dist/bundle.js` ให้เป็นเวอร์ชันล่าสุดก่อน commit และ push ขึ้น GitHub)
 
 ---
 
